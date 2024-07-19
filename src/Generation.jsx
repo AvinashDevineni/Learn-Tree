@@ -1,23 +1,21 @@
 import { useEffect, useState } from "react"
 
+import './Generation.css';
+
 export default function Generation({ maxNumDots, initialNumDots, secsToUpdate, onInit }) {
-    const [dots, setDots] = useState(Array.from({ length: initialNumDots === undefined ? 0 : initialNumDots },
-                                     (_, i) => i));
+    const [numDots, setNumDots] = useState(initialNumDots === undefined ? 0 : initialNumDots);
 
     useEffect(() => {
-        if (maxNumDots === undefined)
-            maxNumDots = 3;
-
-        if (secsToUpdate === undefined)
-            secsToUpdate = 0.5;
+        initialNumDots = initialNumDots === undefined ? 0 : initialNumDots;
+        maxNumDots = maxNumDots === undefined ? 3 : maxNumDots;
+        secsToUpdate = secsToUpdate === undefined ? 0.5 : secsToUpdate;
 
         const interval = setInterval(() => {
-            setDots(dots => {
+            setNumDots(numDots => {
                 let res = null;
-                if (dots.length === maxNumDots)
-                    res = Array.from({ length: initialNumDots === undefined ? 0 : initialNumDots },
-                                     (_, i) => i);
-                else res = dots.concat(dots.length);
+                if (numDots === maxNumDots)
+                    res = initialNumDots;
+                else res = numDots + 1;
 
                 return res;
             });
@@ -31,10 +29,10 @@ export default function Generation({ maxNumDots, initialNumDots, secsToUpdate, o
     
     return (
         <>
-            <h1>
+            <p id="generating">
                 Generating
-                {dots.map(_ => <p style={{margin: '0px', padding: '0px', display: 'inline'}}>.</p>)}
-            </h1>
+                {Array.from({length: numDots}).map((_, i) => <p key={i} style={{margin: '0px', padding: '0px', display: 'inline'}}>.</p>)}
+            </p>
         </>
-    )
+    );
 }

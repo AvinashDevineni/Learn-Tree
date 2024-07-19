@@ -1,0 +1,44 @@
+body {
+    margin: 0px;
+
+    background-color: rgb(31, 31, 31);
+
+    font-size: 3.5vmin;
+    font-family: "Roboto", sans-serif;
+    color: white;
+}
+
+button {
+    padding: 7px 15px;
+
+    background-color: rgb(100, 134, 185);
+    border: none;
+    border-radius: 5px;
+
+    transition: all 0.25s;
+}
+
+button:hover {
+    background-color: rgb(107, 159, 207);
+    scale: 1.1;
+    transform: translateY(-15%);
+    cursor: pointer;
+}
+
+button > p {
+    margin: 0px;
+
+    font-size: clamp(1.35rem, 4vw, 1.75rem);
+    color: white;
+}
+
+input[type="text"] {
+    border: none;
+    border-radius: 5px;
+
+    height: 30px;
+    font-size: clamp(1.2rem, 3vmin, 1.4rem);
+    padding: 10px 10px;
+
+    text-align: center;
+}

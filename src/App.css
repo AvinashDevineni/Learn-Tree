@@ -1,0 +1,8 @@
+#mainTitle {
+    margin: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    font-size: clamp(3rem, 9vw, 4rem);
+    text-align: center;
+}

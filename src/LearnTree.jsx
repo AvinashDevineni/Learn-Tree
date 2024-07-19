@@ -1,8 +1,4 @@
-import { useEffect } from "react";
-
 export default function LearnTree({ topics }) {
-    useEffect(() => console.log(topics))
-
     return (
         <>
             <ul>

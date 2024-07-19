@@ -1,0 +1,24 @@
+#urlSubmit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+
+    margin: auto;
+    margin-top: 15vh;
+
+    text-align: center;
+}
+
+#urlSubmit > label {
+    font-size: clamp(2.25rem, 6vw, 2.5rem);
+    margin-bottom: 0.5rem;
+}
+
+#urlSubmit > input {
+    margin-bottom: 2rem;
+    height: 3vh;
+    width: 80vw;
+    max-width: 430px;
+}

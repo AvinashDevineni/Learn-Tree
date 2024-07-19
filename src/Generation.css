@@ -1,0 +1,5 @@
+#generating {
+    font-size: clamp(2.35rem, 6vw, 3.2rem);
+    text-align: center;
+    margin-top: 30vh;
+}
