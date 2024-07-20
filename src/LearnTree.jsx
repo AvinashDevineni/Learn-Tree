@@ -1,9 +1,11 @@
+import InteractiveBoard from "./InterctiveBoard";
+
 export default function LearnTree({ topics }) {
     return (
         <>
-            <ul>
-                {topics.map((topic, i) => <li key={i}>{topic}</li>)}
-            </ul>
+            <InteractiveBoard>
+                <div style={{width: '100px', height: '100px', backgroundColor: 'white', position: 'absolute'}}></div>
+            </InteractiveBoard>
         </>
     );
 }

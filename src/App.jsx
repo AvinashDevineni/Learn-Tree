@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 
+import Node from './Node.jsx';
 import UrlSubmit from './UrlSubmit.jsx';
 import UrlError from './UrlError.jsx';
 import Generation from './Generation.jsx';
@@ -21,7 +22,7 @@ export default function App() {
 
   return (
     <>
-      <h1 id='mainTitle'>Learn Tree</h1>
+      {!isLearnTreeVisible && <h1 id='mainTitle'>Learn Tree</h1>}
       {
         isUrlSubmitVisible &&
         <>
@@ -42,10 +43,16 @@ export default function App() {
               return;
             hasSentRequest.current = true;
 
-            fetch(`${apiUrl}?url=${ytVideoUrl.current}`)
-            .then(res => res.json()).then(res => {
+            let finalUrl = `${apiUrl}?url=${ytVideoUrl.current}`;
+            fetch(finalUrl).then(res => res.json())
+            .then(res => {
               setIsGenerationVisible(false);
               setIsLearnTreeVisible(true);
+
+              let topics = [];
+              for (let topic of res.topics) {
+                topics.push({topic: topic, parent: finalUrl})
+              }
 
               setVideoTopics(res.topics);
               hasSentRequest.current = false;

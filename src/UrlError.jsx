@@ -9,7 +9,7 @@ export default function UrlError({ onOkClick }) {
                     <button id="urlErrorOk" onClick={() => {
                         if (onOkClick)
                             onOkClick();
-                    }}>Ok</button>
+                    }}><p>Ok</p></button>
                 </div>
             </div>
         </>
