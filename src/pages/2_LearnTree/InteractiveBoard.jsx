@@ -57,8 +57,6 @@ export default function InteractiveBoard({ children }) {
     function clampTranslation(scale) {
         const xBound = initialBoardWidth.current * (scale - 1) / 2;
         const yBound = initialBoardHeight.current * (scale - 1) / 2;
-
-        console.log(scale);
         
         translation.x = clamp(translation.x, -xBound, xBound);
         translation.y = clamp(translation.y, -yBound, yBound);

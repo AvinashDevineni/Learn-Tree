@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 import './Generation.css';
 
-export default function Generation({ maxNumDots, initialNumDots, secsToUpdate, onInit }) {
+export default function Generation({ maxNumDots, initialNumDots, secsToUpdate, onInit, onInitCleanup }) {
     const [numDots, setNumDots] = useState(initialNumDots === undefined ? 0 : initialNumDots);
 
     useEffect(() => {
@@ -24,7 +24,11 @@ export default function Generation({ maxNumDots, initialNumDots, secsToUpdate, o
         if (onInit)
             onInit();
 
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval);
+            if (onInitCleanup)
+                onInitCleanup();
+        };
     }, []);
     
     return (

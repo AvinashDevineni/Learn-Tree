@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react';
 
-import Node from './Node.jsx';
-import UrlSubmit from './UrlSubmit.jsx';
-import UrlError from './UrlError.jsx';
-import Generation from './Generation.jsx';
-import LearnTree from './LearnTree.jsx';
-import apiUrl from './constants.js';
+import UrlSubmit from './pages/0_UrlInput/UrlSubmit.jsx';
+import UrlError from './pages/0_UrlInput/UrlError.jsx';
+import Generation from './pages/1_Generation/Generation.jsx';
+import LearnTree from './pages/2_LearnTree/LearnTree.jsx';
+
+import API_URL from './constants.js';
 
 import './App.css';
 
@@ -18,7 +18,7 @@ export default function App() {
   const [videoTopics, setVideoTopics] = useState([]);
   
   const ytVideoUrl = useRef('');
-  const hasSentRequest = useRef(false);
+  const abortController = useRef();
 
   return (
     <>
@@ -39,31 +39,36 @@ export default function App() {
         isGenerationVisible &&
         <>
           <Generation onInit={() => {
-            if (hasSentRequest.current)
-              return;
-            hasSentRequest.current = true;
+            let finalUrl = `${API_URL}?url=${ytVideoUrl.current}`;
+            abortController.current = new AbortController();
+            const signal = abortController.current.signal;
 
-            let finalUrl = `${apiUrl}?url=${ytVideoUrl.current}`;
-            fetch(finalUrl).then(res => res.json())
+            fetch(finalUrl, {signal}).then(res => res.json())
             .then(res => {
               setIsGenerationVisible(false);
               setIsLearnTreeVisible(true);
 
               let topics = [];
-              for (let topic of res.topics) {
-                topics.push({topic: topic, parent: finalUrl})
-              }
+              for (let topic of res.topics)
+                topics.push(topic);
 
-              setVideoTopics(res.topics);
-              hasSentRequest.current = false;
+              setVideoTopics(topics);
             }).catch(error => console.error(error));
-          }}/>
+          }}
+          onInitCleanup={() => abortController.current.abort()}/>
         </>
       }
       {
         isLearnTreeVisible &&
         <>
-          <LearnTree topics={videoTopics}/>
+          <LearnTree videoUrl={ytVideoUrl.current} topics={videoTopics} onRegenerate={() => {
+            setIsLearnTreeVisible(false);
+            setIsGenerationVisible(true);
+           }}
+           onReset={() => {
+            setIsLearnTreeVisible(false);
+            setIsUrlSubmitVisible(true);
+           }}/>
         </>
       }
     </>

@@ -1,6 +1,6 @@
 import './Node.css';
 
-export default function Node({ value, position }) {
+export default function TreeNode({ value, position }) {
     if (position === undefined)
         position = {x: 100, y: 100}
 
