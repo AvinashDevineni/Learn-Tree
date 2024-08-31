@@ -3,7 +3,7 @@ import { useRef } from "react";
 
 import './InteractiveBoard.css';
 
-export default function InteractiveBoard({ children }) {
+export default function InteractiveBoard({ children, maxScale }) {
     const [scale, setScale] = useState(1);
     const [translation, setTranslation] = useState({x: 0, y: 0});
 
@@ -13,6 +13,9 @@ export default function InteractiveBoard({ children }) {
 
     const scaleDelta = 0.05;
     const prevMousePos = useRef();
+
+    if (!maxScale)
+        maxScale = 1.5;
 
     function handleDragStart(e) {
         prevMousePos.current = {x: e.clientX, y: e.clientY};
@@ -31,7 +34,7 @@ export default function InteractiveBoard({ children }) {
         clampTranslation(scale);
     }
 
-    function handleMouseUp(_) {
+    function handleMouseUp() {
         boardRef.current.removeEventListener('mousemove', handleDragMove);
         boardRef.current.removeEventListener('mouseup', handleMouseUp);
     }
@@ -39,7 +42,7 @@ export default function InteractiveBoard({ children }) {
     function handleWheel(e) {
         if (e.deltaY < 0) {
             setScale(scale => {
-                const newScale = scale + scaleDelta;
+                const newScale = clamp(scale + scaleDelta, 1, maxScale);
                 clampTranslation(newScale);
                 return newScale;
             });
@@ -47,7 +50,7 @@ export default function InteractiveBoard({ children }) {
 
         else {
             setScale(scale => {
-                const newScale = (scale - scaleDelta) < 1 ? 1 : (scale - scaleDelta);
+                const newScale = clamp(scale - scaleDelta, 1, maxScale);
                 clampTranslation(newScale);
                 return newScale;
             });

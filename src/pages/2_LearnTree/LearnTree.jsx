@@ -1,9 +1,15 @@
 import InteractiveBoard from "./InteractiveBoard.jsx";
+import LearnTreeNode from "./LearnTreeNode.jsx";
 
 import './LearnTree.css';
 
-export default function LearnTree({ topics, treeWidth, onRegenerate, onReset }) {
+export default function LearnTree({ topics, treeWidth, nodeWidth, nodeSpacing, onRegenerate, onReset }) {
     const len = topics.length;
+
+    if (!nodeWidth)
+        nodeWidth = 150;
+    if (!nodeSpacing)
+        nodeSpacing = 30;
 
     return (
         <>
@@ -19,6 +25,7 @@ export default function LearnTree({ topics, treeWidth, onRegenerate, onReset }) 
             </div>
 
             <InteractiveBoard>
+                {/* Wrapper div is used to make left: 0px the center of the screen */}
                 <div style={{position: 'absolute', left: '50%', transform: 'translateX(-50%)'}}>
                     {
                         topics.map((topic, i) => {
@@ -26,12 +33,23 @@ export default function LearnTree({ topics, treeWidth, onRegenerate, onReset }) 
                             const pxBetween = (treeWidth === undefined ? 600 : treeWidth) / (2 * numTopicsOnSides);
                             const isOnLeft = i < numTopicsOnSides;
                             
-                            const leftPos = isOnLeft ? (-pxBetween * (numTopicsOnSides - i))
-                                            : (pxBetween * (i - numTopicsOnSides));                            
+                            let leftPos;
+
+                            if (isOnLeft) {
+                                leftPos = -pxBetween * (numTopicsOnSides - i);
+                                leftPos -= nodeSpacing * (numTopicsOnSides - i);
+                            }
+
+                            else {
+                                leftPos = pxBetween * (i - numTopicsOnSides);
+                                leftPos += nodeSpacing * (i - numTopicsOnSides);
+                            }
+
+                            leftPos -= nodeWidth / 2;
+
                             return (
-                                <p key={i} style={{'position': 'relative', 'left': `${leftPos}px`}}>
-                                        {topic}
-                                </p>
+                                <LearnTreeNode key={i} value={topic} size={nodeWidth}
+                                 position={{x: leftPos, y: 0}}/>
                             );
                         })
                     }

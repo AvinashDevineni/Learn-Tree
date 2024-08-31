@@ -61,7 +61,8 @@ export default function App() {
       {
         isLearnTreeVisible &&
         <>
-          <LearnTree videoUrl={ytVideoUrl.current} topics={videoTopics} onRegenerate={() => {
+          <LearnTree videoUrl={ytVideoUrl.current} topics={videoTopics} nodeWidth={150}
+           onRegenerate={() => {
             setIsLearnTreeVisible(false);
             setIsGenerationVisible(true);
            }}
