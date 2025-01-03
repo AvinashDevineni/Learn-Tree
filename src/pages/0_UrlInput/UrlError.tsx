@@ -1,14 +1,18 @@
 import './UrlError.css';
 
-export default function UrlError({ onOkClick }) {
+interface UrlErrorProps {
+    onOkClick: () => void;
+}
+
+export default function UrlError(props: UrlErrorProps) {
     return (
         <>
             <div className="errorWrapper">
                 <div className="error">
                     <h1>URL is invalid</h1>
                     <button id="urlErrorOk" onClick={() => {
-                        if (onOkClick)
-                            onOkClick();
+                        if (props.onOkClick)
+                            props.onOkClick();
                     }}><p>Ok</p></button>
                 </div>
             </div>

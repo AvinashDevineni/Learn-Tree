@@ -3,24 +3,30 @@ import LearnTreeNode from "./LearnTreeNode.jsx";
 
 import './LearnTree.css';
 
-export default function LearnTree({ topics, treeWidth, nodeWidth, nodeSpacing, onRegenerate, onReset }) {
-    const len = topics.length;
+interface LearnTreeProps {
+    topics: string[];
+    treeWidth: number;
+    nodeWidth?: number;
+    nodeSpacing?: number;
+    onRegenerate: () => void;
+    onReset: () => void;
+}
 
-    if (!nodeWidth)
-        nodeWidth = 150;
-    if (!nodeSpacing)
-        nodeSpacing = 30;
+export default function LearnTree(props: LearnTreeProps) {
+    const len = props.topics.length;
+    const nodeSpacing = !props.nodeSpacing ? 30 : props.nodeSpacing;
+    const nodeWidth = !props.nodeWidth ? 150 : props.nodeWidth;
 
     return (
         <>
             <div id="options">
                 <button onClick={() => {
-                    if (onRegenerate)
-                        onRegenerate();
+                    if (props.onRegenerate)
+                        props.onRegenerate();
                  }}><p>Regenerate</p></button>
                 <button id="reset" onClick={() => {
-                    if (onReset)
-                        onReset();
+                    if (props.onReset)
+                        props.onReset();
                  }}><p>Reset</p></button>
             </div>
 
@@ -28,9 +34,9 @@ export default function LearnTree({ topics, treeWidth, nodeWidth, nodeSpacing, o
                 {/* Wrapper div is used to make left: 0px the center of the screen */}
                 <div style={{position: 'absolute', left: '50%', transform: 'translateX(-50%)'}}>
                     {
-                        topics.map((topic, i) => {
+                        props.topics.map((topic, i) => {
                             const numTopicsOnSides = Math.floor(len / 2);
-                            const pxBetween = (treeWidth === undefined ? 600 : treeWidth) / (2 * numTopicsOnSides);
+                            const pxBetween = (props.treeWidth === undefined ? 600 : props.treeWidth) / (2 * numTopicsOnSides);
                             const isOnLeft = i < numTopicsOnSides;
                             
                             let leftPos;

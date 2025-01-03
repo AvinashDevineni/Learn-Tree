@@ -1,30 +1,39 @@
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import { useRef } from "react";
 
 import './InteractiveBoard.css';
 
-export default function InteractiveBoard({ children, maxScale }) {
+interface InteractiveBoardProps {
+    maxScale?: number;
+}
+
+interface Pos {
+    x: number;
+    y: number;
+}
+
+export default function InteractiveBoard(props: PropsWithChildren<InteractiveBoardProps>) {
     const [scale, setScale] = useState(1);
     const [translation, setTranslation] = useState({x: 0, y: 0});
 
-    const boardRef = useRef(null);
-    const initialBoardWidth = useRef();
-    const initialBoardHeight = useRef();
+    const boardRef = useRef<HTMLDivElement | null>(null);
+    const initialBoardWidth = useRef<number>(0);
+    const initialBoardHeight = useRef<number>(0);
+    const prevMousePos = useRef<Pos>({ x: 0, y: 0 });
 
     const scaleDelta = 0.05;
-    const prevMousePos = useRef();
+    const maxScale = !props.maxScale ? 1.5 : props.maxScale;
 
-    if (!maxScale)
-        maxScale = 1.5;
-
-    function handleDragStart(e) {
+    function handleDragStart(e: React.MouseEvent<HTMLDivElement>) {
         prevMousePos.current = {x: e.clientX, y: e.clientY};
 
-        boardRef.current.addEventListener('mousemove', handleDragMove);
-        boardRef.current.addEventListener('mouseup', handleMouseUp);
+        if (boardRef.current != null) {
+            boardRef.current.addEventListener('mousemove', handleDragMove);
+            boardRef.current.addEventListener('mouseup', handleMouseUp);
+        }
     }
 
-    function handleDragMove(e) {
+    function handleDragMove(e: MouseEvent) {
         let deltaPosition = {x: e.clientX - prevMousePos.current.x, y: e.clientY - prevMousePos.current.y};
         prevMousePos.current = {x: e.clientX, y: e.clientY};
 
@@ -35,11 +44,13 @@ export default function InteractiveBoard({ children, maxScale }) {
     }
 
     function handleMouseUp() {
-        boardRef.current.removeEventListener('mousemove', handleDragMove);
-        boardRef.current.removeEventListener('mouseup', handleMouseUp);
+        if (boardRef.current != null) {
+            boardRef.current.removeEventListener('mousemove', handleDragMove);
+            boardRef.current.removeEventListener('mouseup', handleMouseUp);
+        }
     }
 
-    function handleWheel(e) {
+    function handleWheel(e: React.WheelEvent<HTMLDivElement>) {
         if (e.deltaY < 0) {
             setScale(scale => {
                 const newScale = clamp(scale + scaleDelta, 1, maxScale);
@@ -57,7 +68,7 @@ export default function InteractiveBoard({ children, maxScale }) {
         }
     }
 
-    function clampTranslation(scale) {
+    function clampTranslation(scale: number) {
         const xBound = initialBoardWidth.current * (scale - 1) / 2;
         const yBound = initialBoardHeight.current * (scale - 1) / 2;
         
@@ -67,7 +78,7 @@ export default function InteractiveBoard({ children, maxScale }) {
         setTranslation({...translation});
     }
 
-    function clamp(initial, min, max) {
+    function clamp(initial: number, min: number, max: number) {
         let val = initial;
         if (val < min)
             val = min;
@@ -81,7 +92,7 @@ export default function InteractiveBoard({ children, maxScale }) {
     return (
         <>
             <div ref={ref => {
-                if (boardRef.current !== null)
+                if (ref == null)
                     return;
 
                 boardRef.current = ref;
@@ -89,7 +100,7 @@ export default function InteractiveBoard({ children, maxScale }) {
                 initialBoardHeight.current = ref.getBoundingClientRect().height;
              }} id="interactiveBoard" onMouseDown={handleDragStart} onWheel={handleWheel}
              style={{transform: `translateX(${translation.x}px) translateY(${translation.y}px) scale(${scale})`}}>
-                {children}
+                {props.children}
             </div>
         </>
     );
